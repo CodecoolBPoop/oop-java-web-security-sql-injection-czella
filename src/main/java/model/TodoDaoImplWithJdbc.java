@@ -15,9 +15,34 @@ public class TodoDaoImplWithJdbc implements TodoDao {
 
     @Override
     public void add(Todo todo) {
-        String query = "INSERT INTO todos (title, id, status) " +
-                "VALUES ('" + todo.title + "', '" + todo.id + "', '" + todo.status + "');";
-        executeQuery(query);
+        Connection conn = null;
+       PreparedStatement stmt = null;
+       try {
+          conn = getConnection();
+          stmt = conn.prepareStatement("INSERT INTO todos (title, id, status) " +
+                "VALUES (?,?,?);");
+          stmt.setString(1, todo.title);
+          stmt.setString(2, todo.id);
+          stmt.setString(3,todo.status.toString());
+          stmt.executeUpdate();
+       } catch (SQLException e) {
+           e.printStackTrace();
+       }
+       finally {
+          try {
+             if (stmt != null) { stmt.close(); }
+          }
+          catch (Exception e) {
+             // log this error
+          }
+          try {
+             if (conn != null) { conn.close(); }
+          }
+          catch (Exception e) {
+             // log this error
+          }
+       }
+
     }
 
     @Override

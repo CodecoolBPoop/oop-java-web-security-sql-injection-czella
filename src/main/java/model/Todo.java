@@ -1,5 +1,8 @@
 package model;
 
+import org.postgresql.core.Utils;
+
+import java.sql.SQLException;
 import java.util.*;
 
 public class Todo {
